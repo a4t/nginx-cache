@@ -1,0 +1,20 @@
+networks: {}
+version: '3'
+
+services:
+  sinatra:
+    build:
+      context: ./
+      dockerfile: ./Dockerfile
+    volumes:
+      - ./:/app/build
+    command: bundle exec ruby app.rb -o 0.0.0.0
+
+  nginx:
+    image: nginx:1.13.0-alpine
+    links:
+      - sinatra:sinatra
+    volumes:
+      - ./docker/nginx/conf.d:/etc/nginx/conf.d
+    ports:
+      - "58083:8080"
